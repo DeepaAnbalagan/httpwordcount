@@ -1,0 +1,86 @@
+<?xml version = "1.0"?>
+
+<project name = "WordCount" basedir = "." default = "usage">
+
+  
+   <property environment="env"/>
+   <property name = "src.dir" value = "src"/>
+   <property name = "myweb.dir" value = "WebContent"/>
+   <property name = "javadoc.dir" value = "doc"/>
+   <property name = "mybuild.dir" value = "${myweb.dir}/WEB-INF/classes"/>
+   <property name = "myclasspath" value = "${myweb.dir}/WEB-INF/lib"/>
+   <property name = "myproj" value = "wordcount"/>
+   <path id="Web App Libraries.libraryclasspath">
+   <pathelement location="WebContent/WEB-INF/lib/json-simple-1.1.1.jar"/>
+   </path>
+   <path id = "myclasspath">
+      <fileset dir = "${myweb.dir}/WEB-INF/lib">
+         <include name = "*.jar"/>
+      </fileset>
+      <pathelement path = "${mybuild.dir}"/>
+   </path>
+    
+  
+
+   <target name = "usage">
+      <echo message = ""/>
+      <echo message = "${name} build file"/>
+      <echo message = "-----------------------------------"/>
+      <echo message = ""/>
+      <echo message = "Available targets are:"/>
+      <echo message = ""/>
+      <echo message = "deploy    --> Deploy application as directory"/>
+      <echo message = "deploywar --> Deploy application as a WAR file"/>
+      <echo message = ""/>
+   </target>
+
+   <target name = "build" description = "Compile main source tree java files">
+      <mkdir dir = "${mybuild.dir}"/>
+      
+      <javac destdir = "${mybuild.dir}" source = "1.5" target = "1.5" debug = "true"
+         deprecation = "false" optimize = "false" failonerror = "true">
+         
+         <src path = "${src.dir}"/>
+         <classpath refid = "myclasspath"/>
+         
+      </javac>
+   </target>
+
+
+   <target name = "deploy" depends = "build" description = "Deploy application">
+      <copy todir = "${env.CATALINA_HOME}/webapps/${myproj}" preservelastmodified = "true">
+
+         <fileset dir = "${myweb.dir}">
+            <include name = "**/*.*"/>
+         </fileset>
+
+      </copy>
+   </target>
+
+
+   <target name = "deploywar" depends = "build" description = "Deploy application as a WAR file">
+   
+      <war destfile = "${myproj}.war" webxml = "${myweb.dir}/WEB-INF/web.xml">
+         <fileset dir = "${myweb.dir}">
+            <include name = "**/*.*"/>
+         </fileset>
+      </war>
+      
+      <copy todir = "${env.CATALINA_HOME}/webapps" preservelastmodified = "true">
+         <fileset dir = ".">
+            <include name = "*.war"/>
+         </fileset>
+      </copy>
+      
+   </target>
+    
+
+   <target name = "clean" description = "Clean output directories">
+      <delete>
+         <fileset dir = "${mybuild.dir}">
+            <include name = "**/*.class"/>
+         </fileset>
+      </delete>
+   </target>
+   
+</project>
