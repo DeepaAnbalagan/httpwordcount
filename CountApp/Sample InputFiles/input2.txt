@@ -1,0 +1,1 @@
+java .net weblogic atg commerce bigdata data doget dopost esc servlet jsp soap rest java commerce j2ee atg weblogic spring hadoop test winscp hadoop kafka 
